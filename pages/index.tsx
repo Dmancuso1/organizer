@@ -163,9 +163,14 @@ const Home: NextPage = () => {
             {/* display all documents */}
             {serverData.map((document: any) => {
               return (
-                <div key={document.id} className="mb-4 p-2 rounded-md border-gray-300 border shadow-md">
+                <div
+                  key={document.id}
+                  className="mb-4 p-2 rounded-md border-gray-300 border shadow-md"
+                >
                   <div className=" h-20 flex items-center w-full justify-between">
-                    <h3 className="text-2xl font-bold">{document.vendor.raw_name}</h3>
+                    <h3 className="text-2xl font-bold">
+                      {document.vendor.raw_name}
+                    </h3>
                     <p className="hidden sm:inline text-xs text-gray-500 max-w-[150px]">
                       {document.vendor.address}
                     </p>
@@ -176,19 +181,29 @@ const Home: NextPage = () => {
                     />
                   </div>
                   <hr />
+                  <div className="flex items-center py-1 justify-between flex-wrap">
+                    <p className="text-xs text-gray-400 text-start md:text-end">
+                      Document Type: {document.document_type}
+                    </p>
+                    <p className="text-xs text-gray-400 text-start md:text-end">
+                      Date: {document.date}
+                    </p>
+                  </div>
 
                   {/* document lines */}
                   <div className="altBgGray">
                     {document.line_items.map((item: any) => {
                       if (item.description === '' && item.price === 0) return
                       return (
-                        <div key={item.id} className="flex items-center justify-between py-1 text-gray-800 text-sm md:text-base">
+                        <div
+                          key={item.id}
+                          className="flex items-center justify-between py-1 text-gray-800 text-sm md:text-base"
+                        >
                           <p>{item.description}</p>
                           <p>{item.total}</p>
                         </div>
                       )
                     })}
-
                     <div className="flex items-center justify-between py-1 font-semibold text-gray-800 text-sm md:text-base">
                       <p>SUBTOTAL</p>
                       <p>{document.subtotal.toFixed(2)}</p>
@@ -198,9 +213,25 @@ const Home: NextPage = () => {
                       <p>{document.tax.toFixed(2)}</p>
                     </div>{' '}
                     <div className="flex items-center justify-between py-1 font-bold text-gray-800 text-sm md:text-base border-t border-gray-300">
-                      <p>TOTAL</p>
+                      <p>
+                        TOTAL{' '}
+                        {document.currency_code &&
+                          `(${document.currency_code})`}
+                      </p>
                       <p>{document.total.toFixed(2)}</p>
                     </div>
+                  </div>
+                  <div className="flex items-center py-2 justify-between flex-wrap">
+                    <p className="text-xs text-gray-400 text-start md:text-end"></p>
+                    <span className="flex text-xs text-gray-400 text-start md:text-end">
+                      <p className="mr-1">Phone:</p>
+                      <a
+                        href={document.vendor.phone_number}
+                        className=" underline text-xs text-gray-400 text-start md:text-end"
+                      >
+                        {document.vendor.phone_number}
+                      </a>
+                    </span>
                   </div>
                 </div>
               )
