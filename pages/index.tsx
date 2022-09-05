@@ -165,23 +165,27 @@ const Home: NextPage = () => {
               return (
                 <div
                   key={document.id}
-                  className="mb-4 p-2 rounded-md border-gray-300 border shadow-md"
+                  className="mb-8 p-2 rounded-md border-gray-300 border shadow-md"
                 >
                   <div className=" h-20 flex items-center w-full justify-between">
-                    <h3 className="text-2xl font-bold">
+                    <h3 className="text-2xl font-bold text-gray-800">
                       {document.vendor.raw_name}
                     </h3>
                     <p className="hidden sm:inline text-xs text-gray-500 max-w-[150px]">
                       {document.vendor.address}
                     </p>
-                    <img
-                      src={document.vendor.vendor_logo}
-                      alt=""
-                      className="w-20 h-20"
-                    />
+                    <div className="w-20 h-20">
+                      {document.vendor.vendor_logo && (
+                        <img
+                          src={document.vendor.vendor_logo}
+                          alt=""
+                          className="w-20 h-20"
+                        />
+                      )}
+                    </div>
                   </div>
                   <hr />
-                  <div className="flex items-center py-1 justify-between flex-wrap">
+                  <div className="flex items-center pt-1 pb-2 justify-between flex-wrap">
                     <p className="text-xs text-gray-400 text-start md:text-end">
                       Document Type: {document.document_type}
                     </p>
@@ -200,7 +204,7 @@ const Home: NextPage = () => {
                           className="flex items-center justify-between py-1 text-gray-800 text-sm md:text-base"
                         >
                           <p>{item.description}</p>
-                          <p>{item.total}</p>
+                          <p>{item.total.toFixed(2)}</p>
                         </div>
                       )
                     })}
@@ -226,7 +230,7 @@ const Home: NextPage = () => {
                     <span className="flex text-xs text-gray-400 text-start md:text-end">
                       <p className="mr-1">Phone:</p>
                       <a
-                        href={document.vendor.phone_number}
+                        href={'tel:' + document.vendor.phone_number}
                         className=" underline text-xs text-gray-400 text-start md:text-end"
                       >
                         {document.vendor.phone_number}
