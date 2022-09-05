@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@layer utilities {
+  .altBgGray div:nth-child(even) {
+    @apply bg-gray-100
+  }
+}
+

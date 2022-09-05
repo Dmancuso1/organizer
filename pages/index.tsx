@@ -1,85 +1,214 @@
 import type { NextPage } from 'next'
+import { useState, useEffect, useRef } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
 
+import React from 'react'
+
 const Home: NextPage = () => {
+  const [isLoading, setIsLoading] = React.useState(false)
+  //storing the current state of files in the image input on form.
+  const inputFileRef = React.useRef<HTMLInputElement | null>(null)
+
+  // this is the front end file state
+  const [filesState, setFilesState]: any = useState([])
+  // Set the server data to state
+  const [serverData, setServerData]: any = useState([])
+  // store the current mb size
+  const [megaBytes, setMegaBytes]: any = useState(0)
+
+  const stateRef = useRef()
+
+  stateRef.current = megaBytes
+
+  useEffect(() => {
+    console.log(filesState)
+  }, [setFilesState])
+
+  useEffect(() => {
+    handleMBCount()
+  }, [filesState])
+
+  //   capture the current state of the input file objects
+  const onChangeHandler = async (e: any) => {
+    if (e.target.files.length > 0) {
+      console.log('hellow world', [e.target.files])
+      setFilesState([...e.target.files])
+    }
+  }
+
+  // count megabytes
+
+  const handleMBCount = () => {
+    let x = 0.0
+    filesState.forEach((file: any) => {
+      return (x = x + file.size * 0.000001)
+    })
+    setMegaBytes(Math.round(x * 100) / 100)
+  }
+
+  const handleOnClick = async (e: React.MouseEvent<HTMLInputElement>) => {
+    /* Prevent form from submitting by default */
+    e.preventDefault()
+
+    /* If file is not selected, then show alert message */
+    if (!inputFileRef.current?.files?.length) {
+      alert('Please, select file you want to upload')
+      return
+    }
+
+    setIsLoading(true)
+
+    /* Add files to FormData */
+    const formData = new FormData()
+    Object.values(inputFileRef.current.files).forEach((file) => {
+      formData.append('file', file)
+      //   console.log(inputFileRef?.current?.files)
+    })
+
+    /* Send request to our api route */
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    })
+
+    const body = (await response.json()) as {
+      status: 'ok' | 'fail'
+      message: string
+      data: [{}]
+    }
+
+    alert(body.message)
+    console.log('body dot data', body.data)
+
+    if (body.status === 'ok') {
+      inputFileRef.current.value = ''
+      // Do some stuff on successfully upload
+      // send to api try catch and delete file regardless. (already completed in backend)
+
+      // return object from API back to front-end.
+      setServerData(body.data)
+      setFilesState([])
+    } else {
+      // Do some stuff on error
+    }
+
+    setIsLoading(false)
+  }
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2">
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
-        <h1 className="text-6xl font-bold">
-          Welcome to{' '}
-          <a className="text-blue-600" href="https://nextjs.org">
-            Next.js!
-          </a>
-        </h1>
-
-        <p className="mt-3 text-2xl">
-          Get started by editing{' '}
-          <code className="rounded-md bg-gray-100 p-3 font-mono text-lg">
-            pages/index.tsx
-          </code>
-        </p>
-
-        <div className="mt-6 flex max-w-4xl flex-wrap items-center justify-around sm:w-full">
-          <a
-            href="https://nextjs.org/docs"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Documentation &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Find in-depth information about Next.js features and its API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Learn &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Learn about Next.js in an interactive course with quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Examples &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Discover and deploy boilerplate example Next.js projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Deploy &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+    <>
+      <header>
+        <div className="w-full border-b">
+          <h1 className="p-2 font-bold text-4xl">Receipts Upload</h1>
         </div>
-      </main>
+      </header>
+      <section className="w-full mt-6 p-2 max-w-2xl mx-auto">
+        <form className="p-4 rounded-md mx-auto mb-8 flex flex-col text-center  border-gray-300 border shadow-md">
+          <label className="" htmlFor="myfile"></label>
+          <input
+            onChange={onChangeHandler}
+            className="mb-4"
+            type="file"
+            name="myfile"
+            id="myfile"
+            ref={inputFileRef}
+            multiple
+            accept="image/png, image/gif, image/jpeg"
+          />
+          <div className="flex flex-col items-center">
+            {/* <p className="">Drop images here...</p> */}
+            <div>
+              {filesState.map((file: any) => {
+                return (
+                  <div key={file.name} className="flex items-center gap-4 mb-4">
+                    <img
+                      className="w-16 h-16 object-contain"
+                      src={URL.createObjectURL(file)}
+                      alt=""
+                    />
+                    <p className="text-xs sm:text-sm text-gray-900 text-start sm:text-center">
+                      {file.name}
+                    </p>
+                    <p className="hidden sm:inline text-gray-400 text-xs sm:text-sm">
+                      {'(' +
+                        Math.round(file.size * 0.000001 * 100) / 100 +
+                        'Mb' +
+                        ')'}
+                    </p>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+          <div className="flex sm:justify-end sm:w-full">
+            <input
+              className=" shadow-md flex w-full sm:w-auto justify-center cursor-pointer bg-sky-300 px-4 py-2 rounded-md hover:bg-sky-400"
+              type="submit"
+              value={
+                filesState.length > 1
+                  ? `Upload All (${stateRef.current}Mb)`
+                  : 'Upload'
+              }
+              disabled={isLoading}
+              onClick={handleOnClick}
+            />
+            {isLoading && ` Wait, please...`}
+          </div>
+        </form>
 
-      <footer className="flex h-24 w-full items-center justify-center border-t">
-        <a
-          className="flex items-center justify-center gap-2"
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-        </a>
-      </footer>
-    </div>
+        {/* main content container */}
+        {serverData && (
+          <div className="">
+            {/* display all documents */}
+            {serverData.map((document: any) => {
+              return (
+                <div key={document.id} className="mb-4 p-2 rounded-md border-gray-300 border shadow-md">
+                  <div className=" h-20 flex items-center w-full justify-between">
+                    <h3 className="text-2xl font-bold">{document.vendor.raw_name}</h3>
+                    <p className="hidden sm:inline text-xs text-gray-500 max-w-[150px]">
+                      {document.vendor.address}
+                    </p>
+                    <img
+                      src={document.vendor.vendor_logo}
+                      alt=""
+                      className="w-20 h-20"
+                    />
+                  </div>
+                  <hr />
+
+                  {/* document lines */}
+                  <div className="altBgGray">
+                    {document.line_items.map((item: any) => {
+                      if (item.description === '' && item.price === 0) return
+                      return (
+                        <div key={item.id} className="flex items-center justify-between py-1 text-gray-800 text-sm md:text-base">
+                          <p>{item.description}</p>
+                          <p>{item.total}</p>
+                        </div>
+                      )
+                    })}
+
+                    <div className="flex items-center justify-between py-1 font-semibold text-gray-800 text-sm md:text-base">
+                      <p>SUBTOTAL</p>
+                      <p>{document.subtotal.toFixed(2)}</p>
+                    </div>{' '}
+                    <div className="flex items-center justify-between py-1 font-semibold text-gray-800 text-sm md:text-base">
+                      <p>TAX</p>
+                      <p>{document.tax.toFixed(2)}</p>
+                    </div>{' '}
+                    <div className="flex items-center justify-between py-1 font-bold text-gray-800 text-sm md:text-base border-t border-gray-300">
+                      <p>TOTAL</p>
+                      <p>{document.total.toFixed(2)}</p>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </section>
+    </>
   )
 }
 
