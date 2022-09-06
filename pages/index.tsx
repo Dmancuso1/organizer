@@ -132,7 +132,9 @@ const Home: NextPage = () => {
                     </p>
                     <p className="hidden sm:inline text-gray-400 text-xs sm:text-sm">
                       {'(' +
-                        Math.round(file.size * 0.000001 * 100) / 100 +
+                        (Math.round(file.size * 0.000001 * 100) / 100).toFixed(
+                          2,
+                        ) +
                         'Mb' +
                         ')'}
                     </p>
@@ -194,7 +196,7 @@ const Home: NextPage = () => {
                     </p>
                   </div>
 
-                  {/* document lines */}
+                  {/* DOCUMENT LINES */}
                   <div className="altBgGray">
                     {document.line_items.map((item: any) => {
                       if (item.description === '' && item.price === 0) return
@@ -203,7 +205,17 @@ const Home: NextPage = () => {
                           key={item.id}
                           className="flex items-center justify-between py-1 text-gray-800 text-sm md:text-base"
                         >
-                          <p>{item.description}</p>
+                          {/* style for quanties and price */}
+                          <p>
+                            {item.price > 0 && item.quantity > 1 ? (
+                              <>
+                                <span>{item.description}</span>{' '}
+                                <span className="text-gray-400 italic">{`(${item.quantity} @ ${item.price})`}</span>
+                              </>
+                            ) : (
+                              item.description
+                            )}
+                          </p>
                           <p>{item.total.toFixed(2)}</p>
                         </div>
                       )
