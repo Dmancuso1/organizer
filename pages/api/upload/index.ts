@@ -55,12 +55,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   })
 
-  console.log('route path?',process.cwd())
+  console.log('route path?',path.join(process.cwd(), `uploads/`))
 
   if (files?.length) {
     /* Create directory for uploads */
     // const targetPath = path.join(process.cwd(), `/uploads/`) // << old version (works in dev)<<<<
-    const targetPath = path.join(process.cwd(), `uploads`)
+    const targetPath = path.join(process.cwd(), `uploads/`)
 
     try {
       await fs.access(targetPath)
