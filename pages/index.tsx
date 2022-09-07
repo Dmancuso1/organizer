@@ -80,7 +80,7 @@ const Home: NextPage = () => {
       data: [{}]
     }
 
-    alert(body.message)
+    // alert(body.message)
     console.log('body dot data', body.data)
 
     if (body.status === 'ok') {
