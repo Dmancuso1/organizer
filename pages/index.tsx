@@ -72,6 +72,8 @@ const Home: NextPage = () => {
       body: formData,
     })
 
+    
+
     const body = (await response.json()) as {
       status: 'ok' | 'fail'
       message: string
