@@ -4,6 +4,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 
 import React from 'react'
+import { imagesProcessor } from '../uploads/imagesProcessor'
 
 const Home: NextPage = () => {
   const [isLoading, setIsLoading] = React.useState(false)
@@ -51,6 +52,12 @@ const Home: NextPage = () => {
     /* Prevent form from submitting by default */
     e.preventDefault()
 
+    /* TEST ONLY branch update/AWS_S3 */
+    // const test = await imagesProcessor([inputFileRef.current?.files])
+    // console.log('AHAHAHAH', test)
+    // TEST ONLY
+    // console.log('HMMMM',inputFileRef.current?.files)
+
     /* If file is not selected, then show alert message */
     if (!inputFileRef.current?.files?.length) {
       alert('Please, select file you want to upload')
@@ -66,14 +73,15 @@ const Home: NextPage = () => {
       //   console.log(inputFileRef?.current?.files)
     })
 
+    console.log('FORM DATA', formData)
+
     /* Send request to our api route */
     const response = await fetch('/api/upload', {
       method: 'POST',
       body: formData,
     })
 
-    
-// todo: look into this
+    // todo: look into this
     const body = (await response.json()) as {
       status: 'ok' | 'fail'
       message: string
@@ -98,14 +106,22 @@ const Home: NextPage = () => {
     setIsLoading(false)
   }
 
+  //
+  //
+  //
+  //
+
   return (
     <>
+      {/* HEADER */}
       <header>
         <div className="w-full border-b">
           <h1 className="p-2 font-bold text-4xl">Receipts Upload</h1>
         </div>
       </header>
+      {/* MAIN SECTION - Image Selector */}
       <section className="w-full mt-6 p-2 max-w-2xl mx-auto">
+        {/* FORM for Image Selector */}
         <form className="p-4 rounded-md mx-auto mb-8 flex flex-col text-center  border-gray-300 border shadow-md">
           <label className="" htmlFor="myfile"></label>
           <input
@@ -146,6 +162,7 @@ const Home: NextPage = () => {
             </div>
           </div>
           <div className="flex sm:justify-end sm:w-full">
+            {/* MAIN BUTTON !!! */}
             <input
               className=" shadow-md flex w-full sm:w-auto justify-center cursor-pointer bg-sky-300 px-4 py-2 rounded-md hover:bg-sky-400"
               type="submit"
@@ -159,9 +176,10 @@ const Home: NextPage = () => {
             />
             {isLoading && ` Wait, please...`}
           </div>
+          {/* END FORM */}
         </form>
 
-        {/* main content container */}
+        {/* CARD DISPLAY AREA for returned Recept/Invoices */}
         {serverData && (
           <div className="">
             {/* display all documents */}
@@ -256,6 +274,7 @@ const Home: NextPage = () => {
             })}
           </div>
         )}
+        {/* END MAIN SECTION  */}
       </section>
     </>
   )
