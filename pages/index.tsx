@@ -73,7 +73,7 @@ const Home: NextPage = () => {
     })
 
     
-
+// todo: look into this
     const body = (await response.json()) as {
       status: 'ok' | 'fail'
       message: string
