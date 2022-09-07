@@ -20,6 +20,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   let status = 200,
     resultBody = { status: 'ok', message: 'Files were uploaded successfully', data: output }
 
+    // test that result data is JSON
+    function isJsonObject(strData: any) {
+      try {
+          JSON.parse(strData);
+      } catch (e) {
+          return false;
+      }
+      return true;
+  }
+
+
   /* Get files using formidable */
   const files = await new Promise<ProcessedFiles | undefined>(
     (resolve, reject) => {
@@ -44,9 +55,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   })
 
+  console.log('route path?',process.cwd())
+
   if (files?.length) {
     /* Create directory for uploads */
-    const targetPath = path.join(process.cwd(), `/uploads/`)
+    // const targetPath = path.join(process.cwd(), `/uploads/`) // << old version (works in dev)<<<<
+    const targetPath = path.join(process.cwd(), `uploads`)
+
     try {
       await fs.access(targetPath)
     } catch (e) {
@@ -60,6 +75,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       let returnedFile = await getData(targetPath + file[1].originalFilename)
       output.push(returnedFile)
     }
+
 
     // connect to OCR API and then return result in res.json(blablabla)
     /* Remove uploaded files */
