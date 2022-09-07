@@ -72,13 +72,19 @@ const Home: NextPage = () => {
       body: formData,
     })
 
+console.log('RESPONSE', response)
+
+
+
     const body = (await response.json()) as {
       status: 'ok' | 'fail'
       message: string
       data: [{}]
     }
 
-    alert(body.message)
+    console.log('BODY?????',body)
+
+    // alert(body.message)
     console.log('body dot data', body.data)
 
     if (body.status === 'ok') {
