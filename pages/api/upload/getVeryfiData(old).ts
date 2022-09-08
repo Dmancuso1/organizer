@@ -1,3 +1,4 @@
+// TODO: consider keeping this....
 const Client = require('@veryfi/veryfi-sdk')
 const client_id = process.env.VERYFI_CLIENT_ID
 const client_secret = process.env.VERYFI_CLIENT_SECRET

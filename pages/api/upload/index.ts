@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { promises as fs } from 'fs'
 import path from 'path'
 import formidable, { File } from 'formidable'
-import getData from './getVeryfiData'
+import getData from './getVeryfiData(old)'
 
 /* Don't miss that! */
 export const config = {
@@ -17,18 +17,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // initiate array for sending to front end */
   let output:any = []
 
+  
+
   let status = 200,
     resultBody = { status: 'ok', message: 'Files were uploaded successfully', data: output }
 
-    // test that result data is JSON
-    function isJsonObject(strData: any) {
-      try {
-          JSON.parse(strData);
-      } catch (e) {
-          return false;
-      }
-      return true;
-  }
 
 
   /* Get files using formidable */
@@ -61,27 +54,28 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // const targetPath = path.join(process.cwd(), `/uploads/`) // << old version (works in dev)<<<<
     const targetPath = path.join(process.cwd(), `uploads`)
 
-    try {
-      await fs.access(targetPath)
-    } catch (e) {
-      await fs.mkdir(targetPath)
-    }
+    // try {
+    //   await fs.access(targetPath)
+    // } catch (e) {
+    //   await fs.mkdir(targetPath)
+    // }
 
     /* Move uploaded files to directory */
     for (const file of files) {
-      const tempPath = file[1].filepath
-      await fs.rename(tempPath, targetPath + file[1].originalFilename)
-      let returnedFile = await getData(targetPath + file[1].originalFilename)
+      // const tempPath = file[1].filepath
+      // await fs.rename(tempPath, targetPath + file[1].originalFilename)
+      // TODO: latest update... this should do the same thing as before...
+      let returnedFile = await getData(file)
       output.push(returnedFile)
     }
 
 
     // connect to OCR API and then return result in res.json(blablabla)
     /* Remove uploaded files */
-    for (const file of files) {
-      await fs.unlink(targetPath + file[1].originalFilename)
-      console.log(file[1].originalFilename, 'deleted')
-    }
+    // for (const file of files) {
+    //   await fs.unlink(targetPath + file[1].originalFilename)
+    //   console.log(file[1].originalFilename, 'deleted')
+    // }
   }
 
   res.status(status).json(resultBody)

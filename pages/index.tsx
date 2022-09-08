@@ -5,6 +5,7 @@ import Image from 'next/image'
 
 import React from 'react'
 import { imagesProcessor } from '../uploads/imagesProcessor'
+import { getVeryfiData } from '../uploads/getVeryfiData'
 
 const Home: NextPage = () => {
   const [isLoading, setIsLoading] = React.useState(false)
@@ -31,7 +32,7 @@ const Home: NextPage = () => {
   }, [filesState])
 
   //   capture the current state of the input file objects
-  const onChangeHandler = async (e: any) => {
+  const onChangeHandler = (e: any) => {
     if (e.target.files.length > 0) {
       console.log('hellow world', [e.target.files])
       setFilesState([...e.target.files])
@@ -48,15 +49,9 @@ const Home: NextPage = () => {
     setMegaBytes(Math.round(x * 100) / 100)
   }
 
-  const handleOnClick = async (e: React.MouseEvent<HTMLInputElement>) => {
+  const handleOnClick = async (e: any) => {
     /* Prevent form from submitting by default */
     e.preventDefault()
-
-    /* TEST ONLY branch update/AWS_S3 */
-    // const test = await imagesProcessor([inputFileRef.current?.files])
-    // console.log('AHAHAHAH', test)
-    // TEST ONLY
-    // console.log('HMMMM',inputFileRef.current?.files)
 
     /* If file is not selected, then show alert message */
     if (!inputFileRef.current?.files?.length) {
@@ -74,6 +69,35 @@ const Home: NextPage = () => {
     })
 
     console.log('FORM DATA', formData)
+
+    // NEW __>
+
+    /* branch update/AWS_S3 */
+    // console.log('TARGET FILES', filesState)
+    // imagesProcessor gets the file urls (array) from s3
+    // const test = await imagesProcessor(filesState)
+    // console.log('AHAHAHAH', test)
+
+    // getVeryfiData .. (front end only)
+    const test2 = await getVeryfiData(filesState)
+    console.log('getVeryfiData', test2)
+
+    // <__ NEW
+
+    //
+    //
+    //
+    //
+
+    //
+    //
+    //
+    //
+
+    //  OLD ___>
+    //
+    //
+    //
 
     /* Send request to our api route */
     const response = await fetch('/api/upload', {
@@ -102,6 +126,12 @@ const Home: NextPage = () => {
     } else {
       // Do some stuff on error
     }
+    //
+    //
+    // <___ OLD
+
+    //
+    //
 
     setIsLoading(false)
   }
