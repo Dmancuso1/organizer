@@ -4,8 +4,8 @@ import Head from 'next/head'
 import Image from 'next/image'
 
 import React from 'react'
-import { imagesProcessor } from '../uploads/imagesProcessor'
-import { getVeryfiData } from '../uploads/getVeryfiData'
+// Not using the below S3 currently. (for future reference only)
+// import { imagesProcessor } from '../uploads/imagesProcessor'
 
 const Home: NextPage = () => {
   const [isLoading, setIsLoading] = React.useState(false)
@@ -49,7 +49,7 @@ const Home: NextPage = () => {
     setMegaBytes(Math.round(x * 100) / 100)
   }
 
-  const handleOnClick = async (e: any) => {
+  const handleOnClick = async (e: React.MouseEvent<HTMLInputElement>) => {
     /* Prevent form from submitting by default */
     e.preventDefault()
 
@@ -63,47 +63,29 @@ const Home: NextPage = () => {
 
     /* Add files to FormData */
     const formData = new FormData()
-    Object.values(inputFileRef.current.files).forEach((file) => {
+    console.log(
+      'Object.values(inputFileRef.current.files) object values',
+      Object.values(inputFileRef.current.files),
+    )
+    Object.values(inputFileRef.current.files).forEach((file: any) => {
       formData.append('file', file)
-      //   console.log(inputFileRef?.current?.files)
     })
 
     console.log('FORM DATA', formData)
 
-    // NEW __>
-
-    /* branch update/AWS_S3 */
-    // console.log('TARGET FILES', filesState)
+    /* branch update/AWS_S3  --- NOT CURRENTLY USING!!!! */
     // imagesProcessor gets the file urls (array) from s3
     // const test = await imagesProcessor(filesState)
     // console.log('AHAHAHAH', test)
 
-    // getVeryfiData .. (front end only)
-    const test2 = await getVeryfiData(filesState)
-    console.log('getVeryfiData', test2)
-
-    // <__ NEW
-
-    //
-    //
-    //
-    //
-
-    //
-    //
-    //
-    //
-
-    //  OLD ___>
-    //
-    //
-    //
-
     /* Send request to our api route */
+    console.log('test right before sending', formData)
     const response = await fetch('/api/upload', {
       method: 'POST',
       body: formData,
     })
+
+    console.log('RESONSE', response)
 
     // todo: look into this
     const body = (await response.json()) as {
@@ -122,9 +104,13 @@ const Home: NextPage = () => {
 
       // return object from API back to front-end.
       setServerData(body.data)
+      console.log('SERVER DATAAAAAAA (BODY.DATA) ********************', body.data)
       setFilesState([])
     } else {
-      // Do some stuff on error
+      console.log(
+        'Failed sending to /api/upload from front end. check ',
+        body.data,
+      )
     }
     //
     //
@@ -210,7 +196,7 @@ const Home: NextPage = () => {
         </form>
 
         {/* CARD DISPLAY AREA for returned Recept/Invoices */}
-        {serverData && (
+        {serverData.length > 0 ? (
           <div className="">
             {/* display all documents */}
             {serverData.map((document: any) => {
@@ -303,6 +289,8 @@ const Home: NextPage = () => {
               )
             })}
           </div>
+        ) : (
+          <></>
         )}
         {/* END MAIN SECTION  */}
       </section>
