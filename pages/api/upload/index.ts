@@ -19,8 +19,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // initiate array for sending to front end */
   let output: any = []
 
-  let status = 200,
-    resultBody = {
+  let status = 200
+  let resultBody = {
       status: 'ok',
       message: 'Files were uploaded successfully',
       data: output,
@@ -69,6 +69,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       let returnedFile = await getData(targetPath + file[1].originalFilename)
       if (returnedFile) output.push(returnedFile) // CHECK TODO: THIS COULD BREAK A GOOD RESPONSE.. CHECK..
     }
+    // update the body message to reflect that ZERO rows returned from veryfi API
+    if (!output.length) resultBody.message = "We're sorry, No Images could be processed"
 
     /* Remove uploaded files */
     for (const file of files) {
@@ -76,7 +78,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       await fs.unlink(targetPath + file[1].originalFilename)
       console.log(file[1].originalFilename, 'deleted')
     }
-  }
+  } 
 
   res.status(status).json(resultBody)
 }

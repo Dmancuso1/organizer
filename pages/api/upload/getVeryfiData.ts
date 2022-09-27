@@ -12,13 +12,15 @@ const getData = async (file_path: any) => {
   let veryfi_client = new Client(client_id, client_secret, username, api_key)
   let response = await veryfi_client
     .process_document(file_path, (categories = categories))
-    .catch((err: any) =>
+    .catch((err: any) => {
       console.error(
         'THE NEWEST ERROR FROM ******************************** ******** veryfi client... THIS IS PROBABLY THE %)% ERROR',
         err,
-      ),
-    )
-  if (!response) return
+      )
+    })
+  if (!response) {
+    return
+  }
   console.log('VERIFY RESPONSE', response)
   return response
 }

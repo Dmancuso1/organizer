@@ -94,30 +94,31 @@ const Home: NextPage = () => {
       data: [{}]
     }
 
-    // alert(body.message)
     console.log('body dot data', body.data)
 
     if (body.status === 'ok') {
       inputFileRef.current.value = ''
+
       // Do some stuff on successfully upload
+
       // send to api try catch and delete file regardless. (already completed in backend)
+
+      // alert(body.message)
 
       // return object from API back to front-end.
       setServerData(body.data)
-      console.log('SERVER DATAAAAAAA (BODY.DATA) ********************', body.data)
+      console.log(
+        'SERVER DATAAAAAAA (BODY.DATA) ********************',
+        body.data,
+      )
       setFilesState([])
     } else {
       console.log(
         'Failed sending to /api/upload from front end. check ',
         body.data,
       )
+      alert(body.message)
     }
-    //
-    //
-    // <___ OLD
-
-    //
-    //
 
     setIsLoading(false)
   }
