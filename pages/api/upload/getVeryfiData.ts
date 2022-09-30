@@ -14,7 +14,7 @@ const getData = async (file_path: any) => {
     .process_document(file_path, (categories = categories))
     .catch((err: any) => {
       console.error(
-        'THE NEWEST ERROR FROM ******************************** ******** veryfi client... THIS IS PROBABLY THE %)% ERROR',
+        'ERROR FROM ******************************** ******** veryfi client... THIS IS PROBABLY THE %)% ERROR',
         err,
       )
     })

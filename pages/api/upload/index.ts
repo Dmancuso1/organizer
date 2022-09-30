@@ -21,12 +21,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   let status = 200
   let resultBody = {
-      status: 'ok',
-      message: 'Files were uploaded successfully',
-      data: output,
-    }
+    status: 'ok',
+    message: 'Files were uploaded successfully',
+    data: output,
+  }
 
-  /* Get files using formidable */
+  // Get files using formidable
   const files = await new Promise<ProcessedFiles | undefined>(
     (resolve, reject) => {
       const form = new formidable.IncomingForm()
@@ -36,6 +36,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       })
       form.on('end', () => resolve(files))
       form.on('error', (err) => reject(err))
+      // use req http request and parse it.
       form.parse(req, () => {
         //
       })
@@ -64,13 +65,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const tempPath = file[1].filepath
       await fs.rename(tempPath, targetPath + file[1].originalFilename)
 
-      // set invoked imported custom function to get async data from getVeryfiData file.
+      // Use getVeryfi API | set invoked imported custom function to get async data from getVeryfiData file.
       // connects to OCR API and then return result in res.json(blablabla)
       let returnedFile = await getData(targetPath + file[1].originalFilename)
       if (returnedFile) output.push(returnedFile) // CHECK TODO: THIS COULD BREAK A GOOD RESPONSE.. CHECK..
     }
     // update the body message to reflect that ZERO rows returned from veryfi API
-    if (!output.length) resultBody.message = "We're sorry, No Images could be processed"
+    if (!output.length)
+      resultBody.message = "We're sorry, No Images could be processed"
 
     /* Remove uploaded files */
     for (const file of files) {
@@ -78,7 +80,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       await fs.unlink(targetPath + file[1].originalFilename)
       console.log(file[1].originalFilename, 'deleted')
     }
-  } 
+  }
 
   res.status(status).json(resultBody)
 }

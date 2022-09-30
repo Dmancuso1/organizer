@@ -2,9 +2,8 @@ import type { NextPage } from 'next'
 import { useState, useEffect, useRef } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
-
 import React from 'react'
-// Not using the below S3 currently. (for future reference only)
+// NOTE: Not using the below S3 currently. (for future reference only)
 // import { imagesProcessor } from '../uploads/imagesProcessor'
 
 const Home: NextPage = () => {
@@ -12,26 +11,31 @@ const Home: NextPage = () => {
   //storing the current state of files in the image input on form.
   const inputFileRef = React.useRef<HTMLInputElement | null>(null)
 
+  // ||| - ===============================>> \\\ - ||| - =---->
+  //  STATE
+
   // this is the front end file state
   const [filesState, setFilesState]: any = useState([])
   // Set the server data to state
   const [serverData, setServerData]: any = useState([])
   // store the current mb size
   const [megaBytes, setMegaBytes]: any = useState(0)
-
+  // load useRef()
   const stateRef = useRef()
-
+  // setting current stateRef to custom variable 'megaBytes'
   stateRef.current = megaBytes
 
+  // console logs what setFileState is set to at change of setFileState
   useEffect(() => {
     console.log(filesState)
   }, [setFilesState])
 
+  // on fileState change, run function handleMBCount
   useEffect(() => {
     handleMBCount()
   }, [filesState])
 
-  //   capture the current state of the input file objects
+  // capture the current state of the input file objects
   const onChangeHandler = (e: any) => {
     if (e.target.files.length > 0) {
       console.log('hellow world', [e.target.files])
@@ -39,8 +43,8 @@ const Home: NextPage = () => {
     }
   }
 
-  // count megabytes
-
+  // ||| - ===============================>> \\\ - ||| - =---->
+  // count megabytes. set state setMegaBytes
   const handleMBCount = () => {
     let x = 0.0
     filesState.forEach((file: any) => {
@@ -49,6 +53,8 @@ const Home: NextPage = () => {
     setMegaBytes(Math.round(x * 100) / 100)
   }
 
+  // ||| - ===============================>> \\\ - ||| - =---->
+  // handleOnClick uploads an array of images from the user on the front end and uploads them to the the backend api. 
   const handleOnClick = async (e: React.MouseEvent<HTMLInputElement>) => {
     /* Prevent form from submitting by default */
     e.preventDefault()
@@ -59,9 +65,10 @@ const Home: NextPage = () => {
       return
     }
 
+    // begin loading indicator
     setIsLoading(true)
 
-    /* Add files to FormData */
+    // Add selected user uploaded files to FormData on the front end
     const formData = new FormData()
     console.log(
       'Object.values(inputFileRef.current.files) object values',
@@ -125,19 +132,25 @@ const Home: NextPage = () => {
 
   //
   //
+  //  ||| - ==================================>> \\\ - ||| - =---->
+
+  //  ||| - ==================================>> /// - ||| - =---->
   //
   //
 
   return (
     <>
+      {/*   //  ||| - ===============================>> \\\ - ||| - =----> */}
       {/* HEADER */}
       <header>
         <div className="w-full border-b">
           <h1 className="p-2 font-bold text-4xl">Receipts Upload</h1>
         </div>
       </header>
+      {/*   //  ||| - ===============================>> \\\ - ||| - =----> */}
       {/* MAIN SECTION - Image Selector */}
       <section className="w-full mt-6 p-2 max-w-2xl mx-auto">
+        {/*   //  ||| - ===============================>> \\\ - ||| - =----> */}
         {/* FORM for Image Selector */}
         <form className="p-4 rounded-md mx-auto mb-8 flex flex-col text-center  border-gray-300 border shadow-md">
           <label className="" htmlFor="myfile"></label>
@@ -179,6 +192,7 @@ const Home: NextPage = () => {
             </div>
           </div>
           <div className="flex sm:justify-end sm:w-full">
+            {/*   //  ||| - ===============================>> \\\ - ||| - =----> */}
             {/* MAIN BUTTON !!! */}
             <input
               className=" shadow-md flex w-full sm:w-auto justify-center cursor-pointer bg-sky-300 px-4 py-2 rounded-md hover:bg-sky-400"
@@ -196,6 +210,7 @@ const Home: NextPage = () => {
           {/* END FORM */}
         </form>
 
+        {/*   //  ||| - ===============================>> \\\ - ||| - =----> */}
         {/* CARD DISPLAY AREA for returned Recept/Invoices */}
         {serverData.length > 0 ? (
           <div className="">
@@ -232,7 +247,7 @@ const Home: NextPage = () => {
                       Date: {document.date}
                     </p>
                   </div>
-
+                  {/*   //  ||| - ===============================>> \\\ - ||| - =----> */}
                   {/* DOCUMENT LINES */}
                   <div className="altBgGray">
                     {document.line_items.map((item: any) => {
