@@ -144,7 +144,7 @@ const Home: NextPage = () => {
       {/* HEADER */}
       <header>
         <div className="w-full border-b">
-          <h1 className="p-2 font-bold text-4xl">Receipts Upload</h1>
+          <h1 className="p-2 font-bold text-2xl">Upload images of invoices and or receipts</h1>
         </div>
       </header>
       {/*   //  ||| - ===============================>> \\\ - ||| - =----> */}
