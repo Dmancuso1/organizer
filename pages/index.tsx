@@ -54,7 +54,8 @@ const Home: NextPage = () => {
   }
 
   // ||| - ===============================>> \\\ - ||| - =---->
-  // handleOnClick uploads an array of images from the user on the front end and uploads them to the the backend api. 
+  // CLICK FUNCTION
+  // handleOnClick uploads an array of images from the user on the front end and uploads them to the the backend api.
   const handleOnClick = async (e: React.MouseEvent<HTMLInputElement>) => {
     /* Prevent form from submitting by default */
     e.preventDefault()
@@ -78,19 +79,37 @@ const Home: NextPage = () => {
       formData.append('file', file)
     })
 
+    // TODO ****************************************************************
+    // ALTERNATIVE: Make another formData() that sends to another API Route
+
     console.log('FORM DATA', formData)
 
     /* branch update/AWS_S3  --- NOT CURRENTLY USING!!!! */
     // imagesProcessor gets the file urls (array) from s3
-    // const test = await imagesProcessor(filesState)
-    // console.log('AHAHAHAH', test)
+    // const S3Images = await imagesProcessor(filesState)
+    // console.log('AHAHAHAH', S3Images)
 
+    // OPTION 1 | Use API route (server side back end)
     /* Send request to our api route */
+
+    let routesConfig = [
+      {
+        url: '/api/upload', // temporarily stores image in backend and fetches veryfi API data
+      },
+      {
+        url: '/api/documents', // creates S3 image with AWS and fetches veryfi API data
+      },
+    ]
+
+    // TODO: replace hard coded data with routesConfig object above
     console.log('test right before sending', formData)
     const response = await fetch('/api/upload', {
       method: 'POST',
       body: formData,
     })
+
+    // TODO ****************************************************************
+    // OPTION 2 |
 
     console.log('RESONSE', response)
 
@@ -144,7 +163,9 @@ const Home: NextPage = () => {
       {/* HEADER */}
       <header>
         <div className="w-full border-b">
-          <h1 className="p-2 font-bold text-2xl">Upload images of invoices and or receipts</h1>
+          <h1 className="p-2 font-bold text-2xl">
+            Upload images of invoices and or receipts
+          </h1>
         </div>
       </header>
       {/*   //  ||| - ===============================>> \\\ - ||| - =----> */}
