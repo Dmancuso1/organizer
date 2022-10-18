@@ -20,6 +20,15 @@
 
 <!-- ## About the app -->
 
+## Media
+![image](https://github.com/Dmancuso1/organizer/blob/main/public/image%20uploader%202.png?raw=true)
+
+![image](https://github.com/Dmancuso1/organizer/blob/main/public/image%20uploader%201.png?raw=true)
+
+![image](https://github.com/Dmancuso1/organizer/blob/main/public/image%20uploader.png?raw=true)
+
+
+
 
 
 ## Start Development Server:
