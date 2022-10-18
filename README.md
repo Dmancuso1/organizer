@@ -14,8 +14,9 @@
 - `Tailwind CSS.`
 
 ## About The App
-- Connects to `Veryfy (OCR) API` to get meaninful data about the image data.
-- Ability to connect to `AWS S3` buckets and create files from user-uploaded content. Further development will include utilization of AWS S3 to temporarilly store image files while OCR data is collected. (in devlopment, files are temporarilly stored locally)
+- Connects to Veryfi (OCR) API to get meaningful data about the client-supplied image(s).
+- Connects to AWS S3 buckets and create files from user-uploaded content. Further development will include the utilization of AWS S3 to temporarily store image files while OCR data is collected. (in development, files are temporarily stored locally)
+
 
 <!-- ## About the app -->
 
